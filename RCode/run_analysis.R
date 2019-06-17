@@ -55,14 +55,11 @@ combine <- function(){
 #This function is defined to find the average of each variable for each activity and each subject
 avg <- function(){
   #Reading the csv file created by the combine() function
-  
   tidydata <- read.csv("../findata.csv")
-  #Subsetting it from the 2nd column to the last column becasue when the file
-  #was written it generated an extra row number column
-  tidydata <- tidydata[2:ncol(tidydata)]
-  #Changing the subject variable from a list to a factor which lets me create
+  #Changing the subject variable from a list to a factor which lets me create and
   #combine the subject factor and activity factor by interaction()
-  tidydata$Subjects <- factor(tidydata$Subjects, labels = 1:30)
+  print(tidydata$Subjects)
+  tidydata$Subjects <- factor(tidydata$Subjects, labels  =  1:30)
   #creating a factor variable by combining activity and subject no.
   interact <- interaction(tidydata$Subjects, tidydata$activity)
   #Finding the mean of the data by splitting it based on the interact factor variable
@@ -72,5 +69,5 @@ avg <- function(){
   #Creating a data frame which have to be written on a file to be saved on memory
   finalframe <- data.frame(activity.subject, value.mean)
   #Writing it into memory so it can be accessed by others from the github repo
-  write.csv(finalframe,"../average-subject-activity.csv")
+  write.table(finalframe,"../average-subject-activity.txt", row.names = F)
 }
