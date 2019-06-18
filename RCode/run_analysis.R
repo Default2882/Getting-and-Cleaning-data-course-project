@@ -12,7 +12,7 @@ testmakedataset <- function(){
   #Filtering out all the index of  mean and standard deviation values from the features.txt
   k <- grep("mean|std", features$V2)
   #Testset is subsetted only by the first index because my laptop is not powerful enough to process all the data
-  testset <- testset[k[1]]
+  testset <- testset[k]
   #Reading all the activities done for each observation from the file ""../Raw data/test/y_test.txt"
   activity <- read.table("../Raw data/test/y_test.txt")
   #Renaming it to activities because the default name was set to V1
@@ -33,7 +33,7 @@ trainmakedataset <- function(){
   trainset <- read.table("../Raw data/train/X_train.txt")
   features <- read.table("../Raw data/features.txt")
   k <- grep("mean|std", features$V2)
-  trainset <- trainset[k[1]]
+  trainset <- trainset[k]
   #setnames(trainset , old = names(trainset) , new =  as.character(lapply(names(trainset), paste0, "train")))
   activity <- read.table("../Raw data/train/y_train.txt")
   setnames(activity ,old = "V1",new = "Activity")
@@ -41,6 +41,7 @@ trainmakedataset <- function(){
   trainsubject <- read.table("../Raw data/train/subject_train.txt")
   setnames(trainsubject ,old = "V1",new = "Subjects")
   cbind(trainsubject, activity, trainset)
+  #print(names(trainset))
 }
 
 #This function combines and writes a csv file on the memory 
@@ -58,16 +59,15 @@ avg <- function(){
   tidydata <- read.csv("../findata.csv")
   #Changing the subject variable from a list to a factor which lets me create and
   #combine the subject factor and activity factor by interaction()
-  print(tidydata$Subjects)
+  print(names(tidydata))
   tidydata$Subjects <- factor(tidydata$Subjects, labels  =  1:30)
   #creating a factor variable by combining activity and subject no.
   interact <- interaction(tidydata$Subjects, tidydata$activity)
   #Finding the mean of the data by splitting it based on the interact factor variable
   mymean <- lapply(split(tidydata, interact), function(x) mean(x$V1))
   activity.subject <- names(mymean)
-  value.mean <- sapply(mymean, function(x){as.numeric(x[1])})
   #Creating a data frame which have to be written on a file to be saved on memory
-  finalframe <- data.frame(activity.subject, value.mean)
+  finalframe <- rbind(activity.subject, tidydata[3:ncol(tidydata)])
   #Writing it into memory so it can be accessed by others from the github repo
   write.table(finalframe,"../average-subject-activity.txt", row.names = F)
 }
