@@ -31,3 +31,15 @@ the run_analysis.R scipts can be found in the RCode folder
 The main 2 functions are combine() and avg().
 The combine function generates a data set which is the combination of the two test and train raw data set in the "Raw data" folder. This data set is saved in the file called findata.csv. As per the instruction of the 4th guideline.
 The avg() function creates a tidydata set and stores it in the average-subject-activity.txt file. As per the instruction of the 5th guideline.
+
+(Please read the code alongside of the documentation to get a clear picture of what's going on.)
+The testmakedataset and trainmakedataset does the same thing but to their respective datasets.
+The function reads the data set and stores it into the variable for example testset, then the features list is read and stored into a variable. Then the features list is searched using regular expression to get the variables which have mean and std in their names, the index is stored in k. Afer searching the list, the names of the mean and std variables are extracted out of the features variable and stored into a 'name' variable. Then the testset is subsetted to get only the columns which contains the mean and standard deviation of the data and the variable names are set using the 'name' variable.
+Then all the steps are simple, the Y_test.txt and Subjects columns are read from their respective files and the funtion returns a data frame column binding testset, activity column and the subject column.
+
+The combine() function takes the train data set and the test data set as a dataframe form the respective functions and joins them vertically, hence getting a joint data set of both and saves it into a csv file.
+
+Lastly, the avg() function reads the above file and make a 2 level factor variable out of the subject column and the activity column and saves it into the activity.subject variable.
+The next steps combines the activity.subject and the mean variable and **Row Binds them together, which suggests that my tidydata may look diiferent than other because it is row binded**.
+(Refer to the average-activity-subject.csv file to see the differences clearly)
+

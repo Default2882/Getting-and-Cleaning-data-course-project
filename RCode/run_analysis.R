@@ -11,8 +11,11 @@ testmakedataset <- function(){
   features <- read.table("../Raw data/features.txt")
   #Filtering out all the index of  mean and standard deviation values from the features.txt
   k <- grep("mean|std", features$V2)
-  #Testset is subsetted only by the first index because my laptop is not powerful enough to process all the data
+  #getting the names og the variables
+  name <- features$V2[k] 
+  #Testset is subsetted to get the data which is useful to us
   testset <- testset[k]
+  names(testset) <- name
   #Reading all the activities done for each observation from the file ""../Raw data/test/y_test.txt"
   activity <- read.table("../Raw data/test/y_test.txt")
   #Renaming it to activities because the default name was set to V1
@@ -33,7 +36,11 @@ trainmakedataset <- function(){
   trainset <- read.table("../Raw data/train/X_train.txt")
   features <- read.table("../Raw data/features.txt")
   k <- grep("mean|std", features$V2)
+  #getting the names og the variables
+  name <- features$V2[k] 
+  #Testset is subsetted to get the data which is useful to us
   trainset <- trainset[k]
+  names(trainset) <- name
   #setnames(trainset , old = names(trainset) , new =  as.character(lapply(names(trainset), paste0, "train")))
   activity <- read.table("../Raw data/train/y_train.txt")
   setnames(activity ,old = "V1",new = "Activity")
@@ -59,7 +66,7 @@ avg <- function(){
   tidydata <- read.csv("../findata.csv")
   #Changing the subject variable from a list to a factor which lets me create and
   #combine the subject factor and activity factor by interaction()
-  print(names(tidydata))
+  #print(names(tidydata))
   tidydata$Subjects <- factor(tidydata$Subjects, labels  =  1:30)
   #creating a factor variable by combining activity and subject no.
   interact <- interaction(tidydata$Subjects, tidydata$activity)
@@ -69,5 +76,5 @@ avg <- function(){
   #Creating a data frame which have to be written on a file to be saved on memory
   finalframe <- rbind(activity.subject, tidydata[3:ncol(tidydata)])
   #Writing it into memory so it can be accessed by others from the github repo
-  write.table(finalframe,"../average-subject-activity.txt", row.names = F)
+  write.table(finalframe,"../average-subject-activity.csv", row.names = F)
 }
